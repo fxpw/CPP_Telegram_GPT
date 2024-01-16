@@ -5,13 +5,12 @@ gf:
 	git fetch
 gm:
 	git merge
-gp:
+gc:
 	git add . 
 	git commit -m "$(c)"
+gp:
 	git push origin main
-f:
+vcpkg-find:
 	~/projects/vcpkg/vcpkg search "$(p)"
-p:
-	~/projects/vcpkg/vcpkg $(p)
-i:
+vcpkg-install:
 	~/projects/vcpkg/vcpkg install

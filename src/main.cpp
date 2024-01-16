@@ -5,9 +5,9 @@
 #include <fstream>
 #include <string>
 
+
 #include <fmt/format.h>
 #include <tgbot/tgbot.h>
-
 void load_dotenv()
 {
 	std::ifstream env_file(".env");
