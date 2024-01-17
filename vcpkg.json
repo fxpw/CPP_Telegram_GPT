@@ -1,6 +1,8 @@
 {
 	"dependencies": [
 		"tgbot-cpp",
-		"fmt"
+		"fmt",
+		"nlohmann-json",
+		"curl"
 	]
 }

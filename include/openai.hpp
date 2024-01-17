@@ -101,7 +101,6 @@ public:
     void setProxyUrl(const std::string& url) {
         proxy_url_ = url; 
         curl_easy_setopt(curl_, CURLOPT_PROXY, proxy_url_.c_str());
-        
     }
 
     void setBody(const std::string& data);

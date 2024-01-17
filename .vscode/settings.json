@@ -1,9 +1,5 @@
 {
 	"todo-tree.tree.showCountsInTree": true,
-	"C_Cpp.default.includePath": [
-		"${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
-		"${default}",
-	],
 	"cmake.configureSettings": {
 		"CMAKE_TOOLCHAIN_FILE": "~/projects/vcpkg/scripts/buildsystems/vcpkg.cmake",
 		"VCPKG_TARGET_TRIPLET": "x64-linux"
@@ -103,7 +99,24 @@
 		"rope": "cpp",
 		"future": "cpp",
 		"*.ipp": "cpp",
-		"strstream": "cpp"
+		"strstream": "cpp",
+		"unordered_set": "cpp",
+		"slist": "cpp",
+		"ranges": "cpp",
+		"valarray": "cpp"
 	},
-	"C_Cpp.default.compilerPath": "/usr/bin/gcc"
+	"C_Cpp.default.compilerPath": "/usr/bin/gcc",
+	"C_Cpp.codeAnalysis.exclude": {
+		"/mnt/e/repos/fxpw/CPP_Telegram_GPT/build/vcpkg_installed/x64-linux":true,
+		"/mnt/e/repos/fxpw/CPP_Telegram_GPT/build/vcpkg_installed/x64-linux/include/boost":true,
+	},
+	"C_Cpp.default.browse.path": [
+		"${default}",
+		"${workspaceFolder}/include",
+		"${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
+	],
+	"C_Cpp.default.includePath": [
+		"${default}",
+		"${workspaceFolder}/include",
+		"${workspaceFolder}/build/vcpkg_installed/x64-linux/include",]
 }
