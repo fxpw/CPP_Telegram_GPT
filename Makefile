@@ -1,4 +1,3 @@
-m ?= $(shell date +%Y-%m-%d)
 c ?= $(shell date +%Y-%m-%d)
 p ?= 
 project_name = cpp_telegram_gpt

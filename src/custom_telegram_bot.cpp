@@ -4,7 +4,13 @@ CustomTelegramBot::CustomTelegramBot(std::string telegram_token, int telegram_ad
 {
 	token = telegram_token;
 	admin_id = telegram_admin_id;
-	// TgBot::Bot bot(telegram_token);
+	
+	const char * openai_api_key = getenv("OPENAI_API_KEY");
+	// const char * openai_model = getenv("OPENAI_MODEL");
+	std::string proxyUrl = CustomProxy::GetCurrentProxyFromList();
+	openai_instance = new openai::OpenAI(openai_api_key);
+	openai_instance->setProxy(proxyUrl);
+
 	CustomTelegramUsers users_list;
 	RegisterEvents();
 	try
@@ -40,13 +46,13 @@ void CustomTelegramBot::RegisterEvents()
 		if (StringTools::startsWith(message->text, "/start")) {
 			return;
 		}
-		// Getting or creating a user
-        CustomTelegramUser& user = all_users.GetUser(message->from->id);
-
-        // We make a request to GPT and get a response
-        std::string response = user.RequestToGPT(message->text);
-
-		bot.getApi().sendMessage(message->chat->id, "Your message is: \n" + message->text + "\nGPT Response: \n" + response);
+		if (std::to_string(message->chat->id)==custom_env::get_str_param("TELEGRAM_ADMIN_ID")) {
+			CustomTelegramUser& user = all_users.GetUser(message->from->id,openai_instance);
+			std::string response = user.RequestToGPT(message->text);
+			bot.getApi().sendMessage(message->chat->id, "Your message is: \n" + message->text + fmt::format("\n\nChatGPT({}) answer: \n",custom_env::get_str_param("OPENAI_MODEL")) + response,false,0,nullptr,"Markdown");
+			return;
+		}
+		bot.getApi().sendMessage(message->chat->id, std::string("You not user for that bot.\n For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
 	});
 }
 

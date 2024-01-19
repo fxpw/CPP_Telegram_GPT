@@ -10,8 +10,8 @@
 			int user_id;
 			std::map<int, CustomGPTChat> gpt_chats;
 
-			CustomTelegramUser(int telegram_user_id);
-			bool CreateGPTChat();
+			CustomTelegramUser(int telegram_user_id,openai::OpenAI*openai_instance);
+			bool CreateGPTChat(openai::OpenAI*openai_instance);
 			bool ChangeGPTChat(int chat_id);
 			CustomGPTChat& GetCurrentGPTChat();
 			std::string RequestToGPT(std::string request);
@@ -23,7 +23,7 @@
 			std::map<int, CustomTelegramUser> users_list;
 			
 			CustomTelegramUsers();
-			CustomTelegramUser& GetUser(int telegram_user_id);
+			CustomTelegramUser& GetUser(int telegram_user_id,openai::OpenAI*openai_instance);
 	};
 #endif //CUSTOM_TELEGRAM_USERS_HPP
 
