@@ -43,8 +43,8 @@ jobs:
 
     - name: Archive files
       run: |
-        tar czf $app_name.tar.gz build/$app_name .env.example
-        zip -r $app_name.zip build/$app_name .env.example
+        tar czf $app_name.tar.gz ./build/$app_name .env.example
+        zip -r $app_name.zip ./build/$app_name .env.example
 
     - name: Create Release
       id: create_release
