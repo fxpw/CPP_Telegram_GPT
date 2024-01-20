@@ -4,6 +4,8 @@ Thats simple custom telegram bot for user whit youre ChatGPT, also have proxies 
 
 # Build & Run
 
+Before build or run check and change your .env.example whit your parametrs
+
 > make build_project_release #build release
 >
 > make run_project #run release
@@ -11,8 +13,6 @@ Thats simple custom telegram bot for user whit youre ChatGPT, also have proxies 
 check Makefile for more info
 
 # Info
-
-Сhange .env file with your parameters
 
 Сhange ./vscode/settings.json:"CMAKE_TOOLCHAIN_FILE" if you build whit vcpkg in vscode
 
