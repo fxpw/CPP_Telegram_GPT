@@ -7,7 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-variable")
 set(Boost_USE_MULTITHREADED ON)
 
-configure_file(${CMAKE_SOURCE_DIR}/.env ${CMAKE_BINARY_DIR}/.env COPYONLY)
+# configure_file(${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/.env COPYONLY)
+file(COPY ${CMAKE_SOURCE_DIR}/.env.example DESTINATION ${CMAKE_BINARY_DIR} RENAME .env)
 
 file(GLOB SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
