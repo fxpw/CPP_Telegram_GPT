@@ -22,8 +22,8 @@ jobs:
     
 
     - name: Set short sha
-      id: vars
-      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_STATE
+      id: short_sha
+      run: echo "text=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
     - name: Set up CMake
       run: |
@@ -52,7 +52,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.vars.outputs.sha_short }}-${{ steps.tag_date.outputs.date }}
+        tag_name: ${{ steps.short_sha.outputs.text }}-${{ steps.tag_date.outputs.date }}
         release_name: ${{ github.event.repository.name }} - ${{ steps.release_date.outputs.date }}
         draft: false
         prerelease: false
