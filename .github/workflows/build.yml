@@ -6,16 +6,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-        app_name: cpp_telegram_gpt
+      app_name: cpp_telegram_gpt
     steps:
 
     - name: Get current date for release
       id: release_date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%m')"
+      run: echo "date=$(date +'%Y-%m-%d %H:%m')" >> $GITHUB_OUTPUT
 
     - name: Get current date for tag
       id: tag_date
-      run: echo "::set-output name=date::$(date +'%Y%m%d%H%m')"
+      run: echo "date=$(date +'%Y%m%d%H%m')" >> $GITHUB_OUTPUT
     
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
 
     - name: Set short sha
       id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_STATE
 
     - name: Set up CMake
       run: |
@@ -64,7 +64,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: |
-            ${{ env.app_name }}.zip
+          ${{ env.app_name }}.zip
         asset_name: ${{ env.app_name }}.zip
         asset_content_type: application/zip
 
@@ -75,6 +75,6 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: |
-            ${{ env.app_name }}.tar.gz
+          ${{ env.app_name }}.tar.gz
         asset_name: ${{ env.app_name }}.tar.gz
         asset_content_type: application/gzip
