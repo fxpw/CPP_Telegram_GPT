@@ -30,7 +30,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y cmake
 
-
     - name: Build the project
       run: |
         git clone https://github.com/microsoft/vcpkg.git vcpkg
@@ -41,7 +40,6 @@ jobs:
         mkdir -p build
         cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
         cmake --build build --config Release --target all -j 4
-
 
     - name: Archive files
       run: |
@@ -58,7 +56,6 @@ jobs:
         release_name: ${{ github.event.repository.name }} - ${{ steps.release_date.outputs.date }}
         draft: false
         prerelease: false
-
 
     - name: Upload archive 1
       uses: actions/upload-release-asset@v1
