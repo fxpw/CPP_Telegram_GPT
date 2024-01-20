@@ -8,17 +8,17 @@ CustomTelegramBot::CustomTelegramBot(std::string telegram_token, int telegram_ad
 	const char * openai_api_key = getenv("OPENAI_API_KEY");
 	// const char * openai_model = getenv("OPENAI_MODEL");
 	std::string proxyUrl = CustomProxy::GetCurrentProxyFromList();
-	openai_instance = new openai::OpenAI(openai_api_key);
-	openai_instance->setProxy(proxyUrl);
+	this->openai_instance = new openai::OpenAI(openai_api_key);
+	this->openai_instance->setProxy(proxyUrl);
 
 	CustomTelegramUsers users_list;
 	RegisterEvents();
 	try
 	{
-		printf("Bot username: %s\n", bot.getApi().getMe()->username.c_str());
-		bot.getApi().deleteWebhook();
+		printf("Bot username: %s\n", this->bot.getApi().getMe()->username.c_str());
+		this->bot.getApi().deleteWebhook();
 
-		TgBot::TgLongPoll longPoll(bot);
+		TgBot::TgLongPoll longPoll(this->bot);
 		while (true)
 		{
 			printf("Long poll started\n");
@@ -38,8 +38,10 @@ CustomTelegramBot::~CustomTelegramBot()
 
 void CustomTelegramBot::RegisterEvents()
 {
-	bot.getEvents().onCommand("start", [this](TgBot::Message::Ptr message)
-	{ bot.getApi().sendMessage(message->chat->id, "Hello, this is a test bot written in cpp and associated with ChatGPT 3.5 turbo.!"); });
+	this->bot.getEvents().onCommand("start", [this](TgBot::Message::Ptr message)
+	{
+		this->bot.getApi().sendMessage(message->chat->id, "Hello, this is a test bot written in cpp and associated with ChatGPT 3.5 turbo.!");
+	});
 	bot.getEvents().onAnyMessage([this](TgBot::Message::Ptr message)
 	{
 		printf("User wrote %s\n", message->text.c_str());
@@ -47,12 +49,12 @@ void CustomTelegramBot::RegisterEvents()
 			return;
 		}
 		if (std::to_string(message->chat->id)==custom_env::get_str_param("TELEGRAM_ADMIN_ID")) {
-			CustomTelegramUser& user = all_users.GetUser(message->from->id,openai_instance);
+			CustomTelegramUser& user = this->all_users.GetUser(message->from->id,openai_instance);
 			std::string response = user.RequestToGPT(message->text);
-			bot.getApi().sendMessage(message->chat->id, "Your message is: \n" + message->text + fmt::format("\n\nChatGPT({}) answer: \n",custom_env::get_str_param("OPENAI_MODEL")) + response,false,0,nullptr,"Markdown");
+			this->bot.getApi().sendMessage(message->chat->id, "Your message is: \n" + message->text + fmt::format("\n\nChatGPT({}) answer: \n",custom_env::get_str_param("OPENAI_MODEL")) + response,false,0,nullptr,"Markdown");
 			return;
 		}
-		bot.getApi().sendMessage(message->chat->id, std::string("You not user for that bot.\n For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
+		this->bot.getApi().sendMessage(message->chat->id, std::string("You not user for that bot.\n For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
 	});
 }
 

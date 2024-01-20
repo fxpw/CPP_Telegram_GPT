@@ -6,9 +6,10 @@ Thats simple custom telegram bot for user whit youre ChatGPT, also have proxies 
 
 Before run
 
-* check and change your .env.example whit your parametrs
+* check and change your .env.example/.env whit your parametrs
 * rename .env.example to .env
 * .env and cpp_telegram_gpt file need to be at same directory
+* if need use proxy add it to .env
 * run cpp_telegram_gpt
 
 # Build

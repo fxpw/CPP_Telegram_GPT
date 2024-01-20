@@ -8,10 +8,10 @@ CustomTelegramUsers::CustomTelegramUsers()
 
 CustomTelegramUser &CustomTelegramUsers::GetUser(int telegram_user_id,openai::OpenAI*openai_instance)
 {
-	auto it = users_list.find(telegram_user_id);
-	if (it == users_list.end()) {
+	auto it = this->users_list.find(telegram_user_id);
+	if (it == this->users_list.end()) {
 		// If the user is not on the map, create a new one and replace it
-		auto result = users_list.emplace(telegram_user_id, CustomTelegramUser(telegram_user_id,openai_instance));
+		auto result = this->users_list.emplace(telegram_user_id, CustomTelegramUser(telegram_user_id,openai_instance));
 		return result.first->second;
 	} else {
 		// If the user already exists, return it
@@ -23,7 +23,7 @@ CustomTelegramUser::CustomTelegramUser(int telegram_user_id,openai::OpenAI*opena
 {
 	std::map<int, CustomGPTChat> gpt_chats;
 	user_id = telegram_user_id;
-	fmt::print(fmt::format("new CustomTelegramUser::CustomTelegramUser {} {}\n", telegram_user_id, current_gpt_chat_id));
+	fmt::print(fmt::format("new CustomTelegramUser::CustomTelegramUser {} {}\n", telegram_user_id, this->current_gpt_chat_id));
 	CreateGPTChat(openai_instance);
 }
 
@@ -32,11 +32,11 @@ CustomTelegramUser::CustomTelegramUser(int telegram_user_id,openai::OpenAI*opena
 bool CustomTelegramUser::CreateGPTChat(openai::OpenAI*openai_instance)
 {
 	int chat_id = GetLastGPTChatKey()+1;
-	current_gpt_chat_id = chat_id;
-	auto it = gpt_chats.find(chat_id);
-	if (it == gpt_chats.end()) {
+	this->current_gpt_chat_id = chat_id;
+	auto it = this->gpt_chats.find(chat_id);
+	if (it == this->gpt_chats.end()) {
 		// If the user is not on the map, create a new one and replace it
-		auto result = gpt_chats.emplace(chat_id, CustomGPTChat(custom_env::get_str_param("OPENAI_API_KEY"), custom_env::get_str_param("OPENAI_MODEL"), openai_instance));
+		auto result = this->gpt_chats.emplace(chat_id, CustomGPTChat(custom_env::get_str_param("OPENAI_API_KEY"), custom_env::get_str_param("OPENAI_MODEL"), openai_instance));
 		return true;
 	} else {
 		// If the user already exists, return it
@@ -46,14 +46,14 @@ bool CustomTelegramUser::CreateGPTChat(openai::OpenAI*openai_instance)
 
 bool CustomTelegramUser::ChangeGPTChat(int chat_id)
 {
-	current_gpt_chat_id = chat_id;
+	this->current_gpt_chat_id = chat_id;
 	return true;
 }
 
 CustomGPTChat &CustomTelegramUser::GetCurrentGPTChat()
 {
-	auto it = gpt_chats.find(current_gpt_chat_id);
-	if (it != gpt_chats.end()) {
+	auto it = this->gpt_chats.find(this->current_gpt_chat_id);
+	if (it != this->gpt_chats.end()) {
 		// Возвращаем ссылку на чат
 		return it->second;
 	} else {
@@ -70,7 +70,7 @@ std::string CustomTelegramUser::RequestToGPT(std::string request)
 
 std::map<int, CustomGPTChat> CustomTelegramUser::GetAllGPTChats()
 {
-	return gpt_chats;
+	return this->gpt_chats;
 }
 
 int CustomTelegramUser::GetLastGPTChatKey()

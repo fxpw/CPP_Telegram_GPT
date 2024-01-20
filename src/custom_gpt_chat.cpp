@@ -15,7 +15,7 @@ std::string CustomGPTChat::MakeRequest(std::string request_text)
 	});
 	// request["max_tokens"] = 17;
 	request["temperature"] = 0;
-	auto response = openai_instance->chat.create(request);
+	auto response = this->openai_instance->chat.create(request);
 	// fmt::print(std::string(response.dump(4)));
 	std::cout<<response.dump(4)<<std::endl;
     if (response.contains("choices") && response["choices"].is_array()) {
