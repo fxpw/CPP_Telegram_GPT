@@ -1,0 +1,42 @@
+name: Build and Archive
+
+on: [push] # Выберите событие, которое запускает CI/CD, например, push в репозиторий
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+
+
+    - name: Build the project
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git vcpkg
+        cd vcpkg
+        ./bootstrap-vcpkg.sh
+        ./vcpkg integrate install
+        cd ..
+        mkdir -p build
+        cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
+        cmake --build build --config Release --target all -j 4
+
+
+    - name: Archive files
+      run: |
+        tar czf myapp_archive.tar.gz build/cpp_telegram_gpt .env.example
+
+
+    - name: Upload archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: myapp_archive
+        path: myapp_archive.tar.gz
+
+
