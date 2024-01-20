@@ -1,14 +1,29 @@
 name: Build and Archive
 
-on: [push] # Выберите событие, которое запускает CI/CD, например, push в репозиторий
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+        app_name: cpp_telegram_gpt
     steps:
-    - name: Checkout code
+
+    - name: Get current date for release
+      id: release_date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%m')"
+
+    - name: Get current date for tag
+      id: tag_date
+      run: echo "::set-output name=date::$(date +'%Y%m%d%H%m')"
+    
+    - name: Checkout repository
       uses: actions/checkout@v2
+    
+
+    - name: Set short sha
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
     - name: Set up CMake
       run: |
@@ -30,13 +45,39 @@ jobs:
 
     - name: Archive files
       run: |
-        tar czf myapp_archive.tar.gz build/cpp_telegram_gpt .env.example
+        tar czf $app_name.tar.gz build/$app_name .env.example
+        zip -r $app_name.zip build/$app_name .env.example
 
-
-    - name: Upload archive
-      uses: actions/upload-artifact@v2
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: myapp_archive
-        path: myapp_archive.tar.gz
+        tag_name: ${{ steps.vars.outputs.sha_short }}-${{ steps.tag_date.outputs.date }}
+        release_name: ${{ github.event.repository.name }} - ${{ steps.release_date.outputs.date }}
+        draft: false
+        prerelease: false
 
 
+    - name: Upload archive 1
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: |
+            ${{ env.app_name }}.zip
+        asset_name: ${{ env.app_name }}.tar.gz
+        asset_content_type: application/zip
+
+    - name: Upload archive 2
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: |
+            ${{ env.app_name }}.tar.gz
+        asset_name: ${{ env.app_name }}.tar.gz
+        asset_content_type: application/gzip
