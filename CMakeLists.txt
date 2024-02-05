@@ -4,7 +4,8 @@ project(cpp_telegram_gpt VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-variable")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+
 set(Boost_USE_MULTITHREADED ON)
 
 # configure_file(${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/.env COPYONLY)
@@ -19,12 +20,15 @@ find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
 find_package(OpenSSL REQUIRED)
+target_include_directories(${PROJECT_NAME} PRIVATE ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENSSL_LIBRARIES})
 
 find_package(Boost COMPONENTS system REQUIRED)
+target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
 
 find_package(CURL REQUIRED)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE CURL::libcurl)
 
 find_package(fmt CONFIG REQUIRED)
@@ -35,7 +39,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 # find_package(TgBot REQUIRED)
 # target_link_libraries(${PROJECT_NAME} TgBot::TgBot)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/lib/libTgBot.a ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
+# target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/lib/libTgBot.a ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
+
+find_package(tgbot-cpp CONFIG REQUIRED)
+# include_directories(${TgBot_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE TgBot::TgBot)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
 
 include_directories(include)
 # set(CPACK_PROJECT_NAME ${PROJECT_NAME})

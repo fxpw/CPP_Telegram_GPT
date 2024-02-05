@@ -1,7 +1,7 @@
 {
 	"todo-tree.tree.showCountsInTree": true,
 	"cmake.configureSettings": {
-		"CMAKE_TOOLCHAIN_FILE": "~/projects/vcpkg/scripts/buildsystems/vcpkg.cmake",
+		"CMAKE_TOOLCHAIN_FILE": "/home/fxpw/projects/vcpkg/scripts/buildsystems/vcpkg.cmake",
 		"VCPKG_TARGET_TRIPLET": "x64-linux"
 	},
 	"cmake.defaultVariants": {

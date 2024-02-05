@@ -1,80 +1,66 @@
-name: Build and Archive
+name: Cross-Platform Build
 
 on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     env:
       app_name: cpp_telegram_gpt
     steps:
-
-    - name: Get current date for release
-      id: release_date
-      run: echo "date=$(date +'%Y-%m-%d %H:%m')" >> $GITHUB_OUTPUT
-
-    - name: Get current date for tag
-      id: tag_date
-      run: echo "date=$(date +'%Y%m%d%H%m')" >> $GITHUB_OUTPUT
-    
     - name: Checkout repository
       uses: actions/checkout@v2
-    
-
-    - name: Set short sha
-      id: short_sha
-      run: echo "text=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
     - name: Set up CMake
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install -y cmake
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+        fi
+      shell: bash
+
+    - name: Install vcpkg and setup environment
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          ./vcpkg/bootstrap-vcpkg.sh
+          ./vcpkg/vcpkg integrate install
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          .\vcpkg\bootstrap-vcpkg.bat
+          .\vcpkg\vcpkg integrate install
+        fi
+      shell: bash
 
     - name: Build the project
       run: |
-        git clone https://github.com/microsoft/vcpkg.git vcpkg
-        cd vcpkg
-        ./bootstrap-vcpkg.sh
-        ./vcpkg integrate install
-        cd ..
-        mkdir -p build
-        cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
-        cmake --build build --config Release --target all -j 4
+        mkdir build
+        cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          cmake --build build --config Release -- -j 4
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          cmake --build build --config Release -- /m
+        fi
+      shell: bash
 
     - name: Archive files
       run: |
-        tar czf $app_name.tar.gz build/$app_name build/.env
-        zip -r $app_name.zip build/$app_name build/.env
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          tar czf $app_name.tar.gz build/$app_name build/.env
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          Compress-Archive -Path build/$env:app_name, build/.env -DestinationPath $env:app_name.zip -Force
+        fi
+      shell: bash
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.short_sha.outputs.text }}-${{ steps.tag_date.outputs.date }}
-        release_name: ${{ github.event.repository.name }} - ${{ steps.release_date.outputs.date }}
-        draft: false
-        prerelease: false
+        app_name: ${{ env.app_name }}
 
-    - name: Upload archive 1
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload archive
+      uses: actions/upload-artifact@v2
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: |
-          ${{ env.app_name }}.zip
-        asset_name: ${{ env.app_name }}.zip
-        asset_content_type: application/zip
-
-    - name: Upload archive 2
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: |
-          ${{ env.app_name }}.tar.gz
-        asset_name: ${{ env.app_name }}.tar.gz
-        asset_content_type: application/gzip
+        name: ${{ env.app_name }}-${{ matrix.os }}
+        path: |
+          ${{ env.app_name }}.*
