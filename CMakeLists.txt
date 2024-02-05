@@ -37,14 +37,22 @@ target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
-# find_package(TgBot REQUIRED)
-# target_link_libraries(${PROJECT_NAME} TgBot::TgBot)
-# target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/lib/libTgBot.a ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
 
-find_package(tgbot-cpp CONFIG REQUIRED)
+if(WIN32)
+    # Добавьте здесь опции, специфичные для Windows
+    add_definitions(-DWINDOWS_PLATFORM)
+	target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows/lib/libTgBot.lib ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
+endif()
+
+if(UNIX AND NOT APPLE)
+    add_definitions(-DLINUX_PLATFORM)
+	target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/lib/libTgBot.a ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
+endif()
+
+# find_package(tgbot-cpp CONFIG REQUIRED)
 # include_directories(${TgBot_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE TgBot::TgBot)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
+# target_link_libraries(${PROJECT_NAME} PRIVATE TgBot::TgBot)
+# target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
 
 include_directories(include)
 # set(CPACK_PROJECT_NAME ${PROJECT_NAME})

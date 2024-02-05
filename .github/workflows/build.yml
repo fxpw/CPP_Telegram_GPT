@@ -49,10 +49,11 @@ jobs:
     - name: Build the project
       run: |
         mkdir build
-        cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
         if [[ "$RUNNER_OS" == "Linux" ]]; then
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
           cmake --build build --config Release -- -j 4
         elif [[ "$RUNNER_OS" == "Windows" ]]; then
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
           cmake --build build --config Release -- /m
         fi
       shell: bash
