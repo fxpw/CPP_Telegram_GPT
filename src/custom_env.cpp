@@ -39,7 +39,7 @@ void custom_env::load_dotenv() {
 #endif
 
 std::string custom_env::get_str_param(const char* param_name) {
-	std::string value = get_env_var(std::string(param_name));
+	std::string value = custom_env::get_env_var(std::string(param_name));
 	if (value.empty()) {
 		return "error";
 	}
@@ -47,7 +47,7 @@ std::string custom_env::get_str_param(const char* param_name) {
 }
 
 int custom_env::get_int_param(const char* param_name) {
-	std::string value = get_env_var(std::string(param_name));
+	std::string value = custom_env::get_env_var(std::string(param_name));
 	if (value.empty()) {
 		return 0;
 	}
