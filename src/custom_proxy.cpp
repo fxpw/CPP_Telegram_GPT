@@ -39,7 +39,7 @@ void CustomProxy::InitializeProxiesServersData() {
         loginEnv << "PROXY_IP" << i << "_LOGIN";
         passEnv << "PROXY_IP" << i << "_PASSWORD";
 
-        if ((custom_env::get_env_var(ipEnv.str().c_str())!="")) {
+        if (!(custom_env::get_env_var(ipEnv.str().c_str())=="")) {
             CustomProxy::ProxyData data {
                 custom_env::get_env_var(ipEnv.str().c_str()), 
                 custom_env::get_env_var(httpEnv.str().c_str()), 
