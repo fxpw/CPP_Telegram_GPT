@@ -14,12 +14,22 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Cache vcpkg dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.vcpkg/archives
+          vcpkg/installed
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-
+
     - name: Set up CMake
       run: |
-        if [ "$RUNNER_OS" == "Linux" ]; then
+        if [[ "$RUNNER_OS" == "Linux" ]]; then
           sudo apt-get update
           sudo apt-get install -y cmake
-        elif [ "$RUNNER_OS" == "Windows" ]; then
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
         fi
       shell: bash
@@ -27,12 +37,12 @@ jobs:
     - name: Install vcpkg and setup environment
       run: |
         git clone https://github.com/microsoft/vcpkg.git
-        if [ "$RUNNER_OS" == "Linux" ]; then
+        if [[ "$RUNNER_OS" == "Linux" ]]; then
           ./vcpkg/bootstrap-vcpkg.sh
           ./vcpkg/vcpkg integrate install
-        elif [ "$RUNNER_OS" == "Windows" ]; then
-          .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg integrate install
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
+          ./vcpkg/bootstrap-vcpkg.bat
+          ./vcpkg/vcpkg integrate install
         fi
       shell: bash
 
@@ -40,18 +50,18 @@ jobs:
       run: |
         mkdir build
         cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
-        if [ "$RUNNER_OS" == "Linux" ]; then
+        if [[ "$RUNNER_OS" == "Linux" ]]; then
           cmake --build build --config Release -- -j 4
-        elif [ "$RUNNER_OS" == "Windows" ]; then
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
           cmake --build build --config Release -- /m
         fi
       shell: bash
 
     - name: Archive files
       run: |
-        if [ "$RUNNER_OS" == "Linux" ]; then
+        if [[ "$RUNNER_OS" == "Linux" ]]; then
           tar czf $app_name.tar.gz build/$app_name build/.env
-        elif [ "$RUNNER_OS" == "Windows" ]; then
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
           Compress-Archive -Path build/$env:app_name, build/.env -DestinationPath $env:app_name.zip -Force
         fi
       shell: bash
