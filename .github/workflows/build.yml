@@ -77,3 +77,45 @@ jobs:
         name: ${{ env.app_name }}-${{ matrix.os }}
         path: |
           ${{ env.app_name }}.*
+
+  create_release:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      app_name: cpp_telegram_gpt
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+  
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload artifact to Release (Linux)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/cpp_telegram_gpt-ubuntu-latest/${{ env.app_name }}.tar.gz
+          asset_name: ${{ env.app_name }}-linux.tar.gz
+          asset_content_type: application/gzip
+  
+      - name: Upload artifact to Release (Windows)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/cpp_telegram_gpt-windows-latest/${{ env.app_name }}.zip
+          asset_name: ${{ env.app_name }}-windows.zip
+          asset_content_type: application/zip

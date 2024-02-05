@@ -5,7 +5,6 @@
 		// "VCPKG_TARGET_TRIPLET": "x64-linux"
 		"CMAKE_TOOLCHAIN_FILE": "C:/dev/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake",
 		"VCPKG_TARGET_TRIPLET": "x64-windows",
-		"CURL_STATICLIB":true
 	},
 	"cmake.defaultVariants": {
 		"buildType": {
