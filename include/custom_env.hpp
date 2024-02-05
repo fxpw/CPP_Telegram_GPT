@@ -1,13 +1,24 @@
 #ifndef CUSTOM_ENV_HPP
 #define CUSTOM_ENV_HPP
-	#include <cstdlib>
+
 	#include <iostream>
 	#include <fstream>
 	#include <string>
 	#include <fmt/format.h>
-	namespace custom_env{
+
+	#ifdef _WIN32
+	#include <windows.h>
+	#else
+	#include <cstdlib>
+	#endif
+
+	namespace custom_env {
 		void load_dotenv();
 		std::string get_str_param(const char* param_name);
 		int get_int_param(const char* param_name);
-	}
+		std::string get_env_var(const std::string& name);
+
+	
+}
+
 #endif // CUSTOM_ENV_HPP

@@ -8,6 +8,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 set(Boost_USE_MULTITHREADED ON)
 
+if(WIN32)
+	add_definitions(-D_WIN32_WINNT=0x0601)
+endif()
+
 # configure_file(${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/.env COPYONLY)
 execute_process(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/.env

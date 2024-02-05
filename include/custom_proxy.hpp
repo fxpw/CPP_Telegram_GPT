@@ -1,6 +1,10 @@
 #ifndef CUSTOM_PROXY_HPP
 #define CUSTOM_PROXY_HPP
-	#include <cstdlib>
+	#ifdef _WIN32
+		#include <windows.h>
+	#else
+		#include <cstdlib>
+	#endif
 	#include <string>
 	#include <vector>
 	#include <random>
