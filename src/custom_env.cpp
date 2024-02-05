@@ -18,7 +18,7 @@ void custom_env::load_dotenv() {
 }
 
 #ifdef _WIN32
-	std::string get_env_var(const std::string& name) {
+	std::string custom_env::get_env_var(const std::string& name) {
 		char* buffer = nullptr;
 		std::size_t size = 0;
 		if (_dupenv_s(&buffer, &size, name.c_str()) == 0 && buffer != nullptr) {
@@ -29,7 +29,7 @@ void custom_env::load_dotenv() {
 		return "";
 	}
 #else
-	std::string get_env_var(const std::string& name) {
+	std::string custom_env::get_env_var(const std::string& name) {
 		const char* value = std::getenv(name.c_str());
 		if (value == nullptr) {
 			return "";

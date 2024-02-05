@@ -41,11 +41,11 @@ void CustomProxy::InitializeProxiesServersData() {
 
         if (get_env_var(ipEnv.str().c_str())) {
             CustomProxy::ProxyData data {
-                get_env_var(ipEnv.str().c_str()), 
-                get_env_var(httpEnv.str().c_str()), 
-                get_env_var(sockEnv.str().c_str()), 
-                get_env_var(loginEnv.str().c_str()), 
-                get_env_var(passEnv.str().c_str())
+                custom_env::get_env_var(ipEnv.str().c_str()), 
+                custom_env::get_env_var(httpEnv.str().c_str()), 
+                custom_env::get_env_var(sockEnv.str().c_str()), 
+                custom_env::get_env_var(loginEnv.str().c_str()), 
+                custom_env::get_env_var(passEnv.str().c_str())
             };
             // fmt::print(fmt::format("init {} {} {} \n", getenv(ipEnv.str().c_str())),getenv(loginEnv.str().c_str()),getenv(passEnv.str().c_str()));
             CustomProxy::proxyServersData.push_back(data);
