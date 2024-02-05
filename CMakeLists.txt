@@ -4,18 +4,29 @@ project(cpp_telegram_gpt VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(Boost_USE_MULTITHREADED ON)
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
 
 if(WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0601)
 endif()
 
-# configure_file(${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/.env COPYONLY)
-execute_process(
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/.env
-)
+set(Boost_USE_MULTITHREADED ON)
+if(MSVC)
+	execute_process(
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/Release/.env
+	)
+else()
+	execute_process(
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/.env.example ${CMAKE_BINARY_DIR}/.env
+	)
+endif()
 
 file(GLOB SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -43,7 +54,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 
 if(WIN32)
-    # Добавьте здесь опции, специфичные для Windows
     add_definitions(-DWINDOWS_PLATFORM)
 	target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows/lib/TgBot.lib ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
 endif()
@@ -53,25 +63,4 @@ if(UNIX AND NOT APPLE)
 	target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/lib/libTgBot.a ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
 endif()
 
-# find_package(tgbot-cpp CONFIG REQUIRED)
-# include_directories(${TgBot_INCLUDE_DIRS})
-# target_link_libraries(${PROJECT_NAME} PRIVATE TgBot::TgBot)
-# target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
-
 include_directories(include)
-# set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-# set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-# include(CPack)
-# Copy <filename> to build directory
-# set(copy_source_dir "${CMAKE_SOURCE_DIR}/src/<path>")
-# set(copy_dest_dir "${CMAKE_BINARY_DIR}/Build/<path>/$<CONFIG>")
-# set(copy_file_name "<filename>")
-# add_custom_command(
-#     TARGET ${PROJECT_NAME} POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E make_directory ${copy_dest_dir}
-# )
-# add_custom_command(
-#     TARGET ${PROJECT_NAME} POST_BUILD 
-#     COMMAND ${CMAKE_COMMAND} -E copy "${copy_source_dir}/${copy_file_name}" "${copy_dest_dir}/${copy_file_name}"
-#     COMMENT "Copying ${copy_file_name} to build directory"
-# )

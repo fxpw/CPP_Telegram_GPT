@@ -12,7 +12,7 @@ std::string CustomGPTChat::MakeRequest(std::string request_text)
 	request["messages"] = nlohmann::json::array({ 
 		{{"role", "user"}, {"content", request_text}} 
 	});
-	// request["max_tokens"] = 17;
+	request["max_tokens"] = 200;
 	request["temperature"] = 0;
 	auto response = this->openai_instance->chat.create(request);
 	// fmt::print(std::string(response.dump(4)));

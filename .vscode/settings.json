@@ -1,8 +1,11 @@
 {
 	"todo-tree.tree.showCountsInTree": true,
 	"cmake.configureSettings": {
-		"CMAKE_TOOLCHAIN_FILE": "/home/fxpw/projects/vcpkg/scripts/buildsystems/vcpkg.cmake",
-		"VCPKG_TARGET_TRIPLET": "x64-linux"
+		// "CMAKE_TOOLCHAIN_FILE": "/home/fxpw/projects/vcpkg/scripts/buildsystems/vcpkg.cmake",
+		// "VCPKG_TARGET_TRIPLET": "x64-linux"
+		"CMAKE_TOOLCHAIN_FILE": "C:/dev/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake",
+		"VCPKG_TARGET_TRIPLET": "x64-windows",
+		"CURL_STATICLIB":true
 	},
 	"cmake.defaultVariants": {
 		"buildType": {
@@ -103,7 +106,8 @@
 		"unordered_set": "cpp",
 		"slist": "cpp",
 		"ranges": "cpp",
-		"valarray": "cpp"
+		"valarray": "cpp",
+		"xstring": "cpp"
 	},
 	"C_Cpp.default.compilerPath": "/usr/bin/gcc",
 	"C_Cpp.codeAnalysis.exclude": {
@@ -113,10 +117,13 @@
 	"C_Cpp.default.browse.path": [
 		"${default}",
 		"${workspaceFolder}/include",
-		"${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
+		// "${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
+		"${workspaceFolder}/build/vcpkg_installed/x64-windows/include",
 	],
 	"C_Cpp.default.includePath": [
 		"${default}",
 		"${workspaceFolder}/include",
-		"${workspaceFolder}/build/vcpkg_installed/x64-linux/include",]
+		// "${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
+		"${workspaceFolder}/build/vcpkg_installed/x64-windows/include",
+	]
 }

@@ -10,12 +10,12 @@
 	class CustomTelegramBot{
 		private:
 			std::string token;
-			int admin_id;
+			int64_t admin_id;
 			TgBot::Bot bot;
 			CustomTelegramUsers all_users;
 			openai::OpenAI* openai_instance;
 		public:
-			CustomTelegramBot(std::string telegram_token, int telegram_admin_id);
+			CustomTelegramBot(std::string telegram_token, int64_t telegram_admin_id);
 			~CustomTelegramBot();
 			void RegisterEvents();
 			// TgBot::Bot GetBot();

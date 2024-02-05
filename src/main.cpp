@@ -10,7 +10,7 @@ int main()
 	CustomProxy::Init();
 	std::string telegram_bot_token = custom_env::get_str_param("TELEGRAM_TOKEN");
 	if (telegram_bot_token == "") {return 1;};
-	int telegram_bot_admin_id = custom_env::get_int_param("TELEGRAM_ADMIN_ID");
+	int64_t telegram_bot_admin_id = custom_env::get_int_param("TELEGRAM_ADMIN_ID");
 	CustomTelegramBot tg_bot(telegram_bot_token,telegram_bot_admin_id);
 
 

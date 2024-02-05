@@ -12,10 +12,10 @@ jobs:
       app_name: cpp_telegram_gpt
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Cache vcpkg dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.vcpkg/archives
@@ -66,13 +66,13 @@ jobs:
 
     - name: Archive files on Windows
       if: runner.os == 'Windows'
-      run: Compress-Archive -Path build/$env:app_name, build/.env -DestinationPath $env:app_name.zip -Force
+      run: Compress-Archive -Path build/Release -DestinationPath ${{ env.app_name }}.zip -Force
       shell: powershell
       env:
         app_name: ${{ env.app_name }}
 
     - name: Upload archive
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.app_name }}-${{ matrix.os }}
         path: |

@@ -1,15 +1,16 @@
 #include <custom_telegram_bot.hpp>
 
-CustomTelegramBot::CustomTelegramBot(std::string telegram_token, int telegram_admin_id): token(telegram_token), admin_id(telegram_admin_id), bot(telegram_token)
+CustomTelegramBot::CustomTelegramBot(std::string telegram_token, int64_t telegram_admin_id): token(telegram_token), admin_id(telegram_admin_id), bot(telegram_token)
 {
 	token = telegram_token;
 	admin_id = telegram_admin_id;
 	
-	const char * openai_api_key = getenv("OPENAI_API_KEY");
+	std::string openai_api_key = custom_env::get_env_var("OPENAI_API_KEY");
 	// const char * openai_model = getenv("OPENAI_MODEL");
 	std::string proxyUrl = CustomProxy::GetCurrentProxyFromList();
-	this->openai_instance = new openai::OpenAI(openai_api_key);
-	this->openai_instance->setProxy(proxyUrl);
+	// openai_instance = nullptr;
+	openai_instance = new openai::OpenAI(openai_api_key);
+	openai_instance->setProxy(proxyUrl);
 
 	CustomTelegramUsers users_list;
 	RegisterEvents();
@@ -44,14 +45,21 @@ void CustomTelegramBot::RegisterEvents()
 	});
 	bot.getEvents().onAnyMessage([this](TgBot::Message::Ptr message)
 	{
-		printf("User wrote %s\n", message->text.c_str());
+		fmt::print(fmt::format("User wrote {}\n", message->text));
 		if (StringTools::startsWith(message->text, "/start")) {
 			return;
 		}
 		if (std::to_string(message->chat->id)==custom_env::get_str_param("TELEGRAM_ADMIN_ID")) {
 			CustomTelegramUser& user = this->all_users.GetUser(message->from->id,openai_instance);
 			std::string response = user.RequestToGPT(message->text);
-			this->bot.getApi().sendMessage(message->chat->id, "Your message is: \n" + message->text + fmt::format("\n\nChatGPT({}) answer: \n",custom_env::get_str_param("OPENAI_MODEL")) + response,false,0,nullptr,"Markdown");
+			try{
+				this->bot.getApi().sendMessage(message->chat->id, "Your message is: \n" + message->text + fmt::format("\n\nChatGPT({}) answer: \n",custom_env::get_str_param("OPENAI_MODEL")) + response,false,0,nullptr,"Markdown");
+			}
+			catch (std::exception &e)
+			{
+				fmt::print(fmt::format("error {}\n", e.what()));
+			}
+			
 			return;
 		}
 		this->bot.getApi().sendMessage(message->chat->id, std::string("You not user for that bot.\n For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
