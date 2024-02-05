@@ -4,11 +4,13 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
+                // "${workspaceFolder}/build/vcpkg_installed/x64-windows/include", //for windows
+                // "${workspaceFolder}/build/vcpkg_installed/x64-linux/include", //for linux
                 "${default}"
             ],
             "defines": [],
             "intelliSenseMode": "linux-gcc-x64",
+            // "compilerPath": "/path/to/gcc",
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c23",
             "cppStandard": "c++23"

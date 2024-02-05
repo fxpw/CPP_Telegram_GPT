@@ -6,23 +6,13 @@ Thats simple custom telegram bot for use whit youre ChatGPT, also have proxies s
 
 Before run
 
-* check and change your .env.example/.env whit your parametrs
-* rename .env.example to .env
-* .env and cpp_telegram_gpt file need to be at same directory
+* check and change your .env whit your parametrs
 * if need use proxy add it to .env
-* run cpp_telegram_gpt
+* run cpp_telegram_gpt or cpp_telegram_gpt.exe
 
 # Build
 
-```bash
-make build_project_release #build release
-```
-
-```bash
-make build_project_debug #build release
-```
-
-Check Makefile for more commands
+Check Makefile for commands
 
 # Info
 

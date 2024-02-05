@@ -13,12 +13,12 @@
 			"choices": {
 				"debug": {
 					"short": "Debug",
-					"long": "Отключение оптимизации — включение отладочных данных.",
+					"long": "Disable optimization - enable debugging data.",
 					"buildType": "Debug"
 				},
 				"release": {
 					"short": "Release",
-					"long": "Оптимизация для быстродействия — исключение отладочных данных.",
+					"long": "Optimized for performance - eliminating debugging data.",
 					"buildType": "Release"
 				},
 			}
@@ -116,13 +116,13 @@
 	"C_Cpp.default.browse.path": [
 		"${default}",
 		"${workspaceFolder}/include",
-		// "${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
-		"${workspaceFolder}/build/vcpkg_installed/x64-windows/include",
+		// "${workspaceFolder}/build/vcpkg_installed/x64-linux/include", // for linux
+		// "${workspaceFolder}/build/vcpkg_installed/x64-windows/include", // for windows
 	],
 	"C_Cpp.default.includePath": [
 		"${default}",
 		"${workspaceFolder}/include",
-		// "${workspaceFolder}/build/vcpkg_installed/x64-linux/include",
-		"${workspaceFolder}/build/vcpkg_installed/x64-windows/include",
+		// "${workspaceFolder}/build/vcpkg_installed/x64-linux/include", // for linux
+		// "${workspaceFolder}/build/vcpkg_installed/x64-windows/include", // for windows
 	]
 }
