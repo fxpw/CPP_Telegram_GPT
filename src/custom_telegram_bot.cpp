@@ -47,9 +47,13 @@ void CustomTelegramBot::RegisterEvents()
 	{
 		fmt::print(fmt::format("User wrote {}\n", message->text));
 		if (StringTools::startsWith(message->text, "/start")) {
+			this->bot.getApi().sendMessage(message->chat->id, std::string("For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
 			return;
 		}
-		if (std::to_string(message->chat->id)==custom_env::get_str_param("TELEGRAM_ADMIN_ID")) {
+		bool isCheckIdRequired = custom_env::get_str_param("TELEGRAM_NEED_CHECK_ID") == "TRUE";
+		bool isAdminId = std::to_string(message->chat->id) == custom_env::get_str_param("TELEGRAM_ADMIN_ID");
+		bool isCheckIdNotRequired = custom_env::get_str_param("TELEGRAM_NEED_CHECK_ID") == "FALSE";
+		if (isCheckIdNotRequired || (isCheckIdRequired && isAdminId)){
 			CustomTelegramUser& user = this->all_users.GetUser(message->from->id,openai_instance);
 			std::string response = user.RequestToGPT(message->text);
 			try{
@@ -59,10 +63,10 @@ void CustomTelegramBot::RegisterEvents()
 			{
 				fmt::print(fmt::format("error {}\n", e.what()));
 			}
-			
 			return;
+		}else{
+			this->bot.getApi().sendMessage(message->chat->id, std::string("You not user for that bot.\n For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
 		}
-		this->bot.getApi().sendMessage(message->chat->id, std::string("You not user for that bot.\n For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
 	});
 }
 
