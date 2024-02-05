@@ -41,13 +41,12 @@ void CustomTelegramBot::RegisterEvents()
 {
 	this->bot.getEvents().onCommand("start", [this](TgBot::Message::Ptr message)
 	{
-		this->bot.getApi().sendMessage(message->chat->id, "Hello, this is a test bot written in cpp and associated with ChatGPT 3.5 turbo.!");
+		this->bot.getApi().sendMessage(message->chat->id, std::string("Hello, this is a test bot written in cpp and associated with ChatGPT!\nFor more info check https://github.com/fxpw/CPP_Telegram_GPT"));
 	});
 	bot.getEvents().onAnyMessage([this](TgBot::Message::Ptr message)
 	{
 		fmt::print(fmt::format("User wrote {}\n", message->text));
 		if (StringTools::startsWith(message->text, "/start")) {
-			this->bot.getApi().sendMessage(message->chat->id, std::string("For more info check https://github.com/fxpw/CPP_Telegram_GPT"),false,0,nullptr,"Markdown");
 			return;
 		}
 		bool isCheckIdRequired = custom_env::get_str_param("TELEGRAM_NEED_CHECK_ID") == "TRUE";
