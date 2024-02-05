@@ -1,7 +1,6 @@
 #include <custom_gpt_chat.hpp>
 
 
-
 CustomGPTChat::CustomGPTChat(std::string openai_api_key, std::string openai_model,openai::OpenAI*openai_instance):api_key(openai_api_key),model(openai_model),openai_instance(openai_instance)
 {
 }
