@@ -37,35 +37,37 @@ jobs:
     - name: Install vcpkg and setup environment
       run: |
         git clone https://github.com/microsoft/vcpkg.git
-        if [[ "$RUNNER_OS" == "Linux" ]]; then
-          ./vcpkg/bootstrap-vcpkg.sh
-          ./vcpkg/vcpkg integrate install
-        elif [[ "$RUNNER_OS" == "Windows" ]]; then
-          ./vcpkg/bootstrap-vcpkg.bat
-          ./vcpkg/vcpkg integrate install
-        fi
+        ./vcpkg/bootstrap-vcpkg.sh
+        ./vcpkg/vcpkg integrate install
       shell: bash
 
-    - name: Build the project
+    - name: Build the project on Linux
+      if: runner.os == 'Linux'
       run: |
         mkdir build
-        if [[ "$RUNNER_OS" == "Linux" ]]; then
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
-          cmake --build build --config Release -- -j 4
-        elif [[ "$RUNNER_OS" == "Windows" ]]; then
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
-          cmake --build build --config Release -- /m
-        fi
+        cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
+        cmake --build build --config Release -- -j 4
       shell: bash
 
-    - name: Archive files
+    - name: Build the project on Windows
+      if: runner.os == 'Windows'
       run: |
-        if [[ "$RUNNER_OS" == "Linux" ]]; then
-          tar czf $app_name.tar.gz build/$app_name build/.env
-        elif [[ "$RUNNER_OS" == "Windows" ]]; then
-          Compress-Archive -Path build/$env:app_name, build/.env -DestinationPath $env:app_name.zip -Force
-        fi
+        mkdir build
+        cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
+        cmake --build build --config Release -- /m
+      shell: cmd
+
+    - name: Archive files on Linux
+      if: runner.os == 'Linux'
+      run: tar czf $app_name.tar.gz build/$app_name build/.env
       shell: bash
+      env:
+        app_name: ${{ env.app_name }}
+
+    - name: Archive files on Windows
+      if: runner.os == 'Windows'
+      run: Compress-Archive -Path build/$env:app_name, build/.env -DestinationPath $env:app_name.zip -Force
+      shell: powershell
       env:
         app_name: ${{ env.app_name }}
 
