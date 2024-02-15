@@ -18,7 +18,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: |
-          ~/.vcpkg/archives
+          build/vcpkg_installed
           vcpkg/installed
         key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
         restore-keys: |
