@@ -54,9 +54,7 @@ jobs:
     - name: Build the project on Windows
       if: runner.os == 'Windows'
       run: |
-        if [ ! -d "build" ]; then
-          mkdir build
-        fi
+        mkdir build 2>NUL
         cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
         cmake --build build --config Release -- /m
       shell: cmd
