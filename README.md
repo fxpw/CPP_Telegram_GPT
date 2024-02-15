@@ -1,6 +1,6 @@
 # cpp telegram+chat_gpt project
 
-Thats simple custom telegram bot for use whit youre ChatGPT, also have proxies support if it needed
+Thats simple custom telegram bot for use whit youre ChatGPT, also have proxies support if it need
 
 # Run
 
