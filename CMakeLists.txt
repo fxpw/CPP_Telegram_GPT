@@ -4,7 +4,6 @@ project(cpp_telegram_gpt VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
@@ -28,6 +27,8 @@ else()
 	)
 endif()
 
+include_directories(include)
+
 file(GLOB SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -43,7 +44,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
 
 find_package(CURL REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
+# target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE CURL::libcurl)
 
 find_package(fmt CONFIG REQUIRED)
@@ -63,4 +64,4 @@ if(UNIX AND NOT APPLE)
 	target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/lib/libTgBot.a ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
 endif()
 
-include_directories(include)
+

@@ -18,10 +18,10 @@
 	public:
 		struct ProxyData {
 			std::string ip;
-			std::string httpPort;
-			std::string sock;
+			std::string port;
 			std::string login;
 			std::string pass;
+			std::string is_socs5;
 		};
 
 		static std::vector<ProxyData> proxyServersData;
